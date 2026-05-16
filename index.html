@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CASHFLOW GLOBAL - PREMIUM TERMINAL</title>
+    <title>CASHFLOW GLOBAL - STABLE TERMINAL v8.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -18,7 +18,7 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; overflow: hidden; margin: 0; }
         
-        /* ORIGINAL STANDARD GOOGLE MAP LOOK AS REQUESTED */
+        /* ORIGINAL STANDARD GOOGLE MAP LOOK */
         #map { width: 100%; height: 52vh; background: #cbd5e1; z-index: 10; }
         
         /* PREMIUM BOTTOM SHEET UI PANEL */
@@ -128,9 +128,19 @@
                         </div>
 
                         <div id="userBiddingMonitorRadarRoom" class="hidden h-full flex flex-col justify-between overflow-hidden">
-                            <div class="flex justify-between items-center bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2">
-                                <p class="text-[9px] font-black text-slate-400 tracking-wider">RADAR STREAM RESPONSES</p>
-                                <span class="text-[10px] font-black text-emerald-600" id="liveRadarViewersTextCount"><i class="fa-solid fa-users animate-pulse mr-1"></i> 0 Agents Scanning</span>
+                            <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2 space-y-2">
+                                <div class="flex justify-between items-center">
+                                    <p class="text-[9px] font-black text-slate-400 tracking-wider">RADAR ACTIVE PROFILE</p>
+                                    <span class="text-[10px] font-black text-emerald-600" id="liveRadarViewersTextCount"><i class="fa-solid fa-users animate-pulse mr-1"></i> 0 Agents Scanning</span>
+                                </div>
+                                <div class="text-[11px] text-slate-700 font-bold flex justify-between bg-white p-2 rounded-lg border border-slate-100">
+                                    <span>Live Offer: <strong id="userLiveOfferDisplay">PKR 0</strong></span>
+                                    <span>Tip: <strong id="userLiveTipDisplay" class="text-emerald-500">PKR 0</strong></span>
+                                </div>
+                                <div class="flex gap-2">
+                                    <button onclick="increaseUserOfferTipSurge()" class="flex-1 bg-amber-500 text-white font-black text-[10px] p-2 rounded-xl shadow-sm uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i> Raise Reward (+50 PKR)</button>
+                                    <button onclick="cancelActiveUserRequestSignal()" class="flex-1 bg-red-600 text-white font-black text-[10px] p-2 rounded-xl shadow-sm uppercase tracking-wider"><i class="fa-solid fa-trash-can mr-1"></i> Cancel Req</button>
+                                </div>
                             </div>
                             <div id="userLiveIncomingBidsFeed" class="flex-1 overflow-y-auto space-y-2 pr-1"></div>
                         </div>
@@ -165,7 +175,6 @@
     </div>
 
     <script>
-        // TARGET INSTANCE ENDPOINT LINK CONNECTED
         const firebaseConfig = { databaseURL: "https://cashflow-fa937-default-rtdb.firebaseio.com/" };
         firebase.initializeApp(firebaseConfig); const runtimeDBRef = firebase.database();
         
@@ -174,7 +183,7 @@
         let activeBroadcastOrderID = null; let isRadarListeningActive = false; let currentAuthModeState = 'login';
 
         function setupStandardCleanLeafletMap() {
-            leafletMapEngineObj = L.map('map', { zoomControl: false, attributionControl: false }).setView([30.1575, 71.5249], 14); // Centered over Multan Coordinates
+            leafletMapEngineObj = L.map('map', { zoomControl: false, attributionControl: false }).setView([30.1575, 71.5249], 14);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMapEngineObj);
             L.marker([30.1575, 71.5249]).addTo(leafletMapEngineObj);
         }
@@ -264,21 +273,56 @@
 
         function trackUserRequestStreamLifecycle(id) {
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + id).on('value', snapshot => {
-                const tx = snapshot.val(); if(!tx) return;
+                const tx = snapshot.val(); 
+                if(!tx) { 
+                    // Handle case where request was cancelled from DB
+                    abortActiveMonitorScreenState();
+                    return; 
+                }
+                
+                document.getElementById('userLiveOfferDisplay').innerText = "PKR " + tx.amt;
+                document.getElementById('userLiveTipDisplay').innerText = "PKR " + tx.comm;
                 document.getElementById('liveRadarViewersTextCount').innerHTML = `<i class="fa-solid fa-users animate-pulse mr-1"></i> ${tx.views || 1} Agents Scanning`;
                 
-                if(tx.status === 'bidded') {
+                if(tx.status === 'pending' || tx.status === 'bidded') {
                     const block = document.getElementById('userLiveIncomingBidsFeed'); block.innerHTML = "";
-                    tx.bids && Object.keys(tx.bids).forEach(key => {
-                        const b = tx.bids[key]; block.innerHTML += `
-                            <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center justify-between shadow-sm">
-                                <div class="flex items-center gap-3"><img src="${b.aPic}" class="w-10 h-10 rounded-xl bg-white border border-slate-200"><div class="text-left"><p class="font-black text-xs text-slate-800">${b.aName}</p><p class="text-[9px] text-emerald-600 font-bold">Delivery Tip Proposal: PKR ${b.proposedBid}</p></div></div>
-                                <div class="flex gap-1"><button onclick="executeUserDecisionMatrix('accept', '${b.aUID}', '${b.proposedBid}')" class="bg-emerald-500 text-white font-black text-[10px] px-3 py-2 rounded-xl">ACCEPT</button><button onclick="executeUserDecisionMatrix('reject', '${b.aUID}', '0')" class="bg-slate-200 text-slate-600 text-[10px] px-2 py-2 rounded-xl"><i class="fa-solid fa-xmark"></i></button></div>
-                            </div>`;
-                    });
+                    if(tx.bids) {
+                        Object.keys(tx.bids).forEach(key => {
+                            const b = tx.bids[key]; block.innerHTML += `
+                                <div class="bg-slate-50 p-4 rounded-xl border border-slate-100 flex items-center justify-between shadow-sm">
+                                    <div class="flex items-center gap-3"><img src="${b.aPic}" class="w-10 h-10 rounded-xl bg-white border border-slate-200"><div class="text-left"><p class="font-black text-xs text-slate-800">${b.aName}</p><p class="text-[9px] text-emerald-600 font-bold">Delivery Tip Proposal: PKR ${b.proposedBid}</p></div></div>
+                                    <div class="flex gap-1"><button onclick="executeUserDecisionMatrix('accept', '${b.aUID}', '${b.proposedBid}')" class="bg-emerald-500 text-white font-black text-[10px] px-3 py-2 rounded-xl">ACCEPT</button><button onclick="executeUserDecisionMatrix('reject', '${b.aUID}', '0')" class="bg-slate-200 text-slate-600 text-[10px] px-2 py-2 rounded-xl"><i class="fa-solid fa-xmark"></i></button></div>
+                                </div>`;
+                        });
+                    } else {
+                        block.innerHTML = "<p class='text-center text-xs text-slate-400 font-bold py-6 animate-pulse'><i class='fa-solid fa-satellite-dish mr-1 text-base'></i> Waiting for Multan Agents to counter bid...</p>";
+                    }
                 }
                 if(tx.status === 'locked') { launchSecureTransitNodeTerminalPanel(tx); }
             });
+        }
+
+        // INDRIVE EXTRA DYNAMIC FEATURES
+        function increaseUserOfferTipSurge() {
+            if(!activeBroadcastOrderID) return;
+            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/comm').transaction(currentTip => {
+                return (Number(currentTip) || 0) + 50;
+            });
+        }
+
+        function cancelActiveUserRequestSignal() {
+            if(!activeBroadcastOrderID) return;
+            if(confirm("Are you sure you want to cancel this CashFlow request?")) {
+                runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).remove();
+                abortActiveMonitorScreenState();
+            }
+        }
+
+        function abortActiveMonitorScreenState() {
+            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).off();
+            activeBroadcastOrderID = null;
+            document.getElementById('userBiddingMonitorRadarRoom').classList.add('hidden');
+            document.getElementById('userHomeMenuLayout').classList.remove('hidden');
         }
 
         function executeUserDecisionMatrix(action, agentUID, targetBidTip) {
@@ -295,20 +339,24 @@
             const paneBox = document.getElementById('agentSingleFocusedStreamContainer');
             if(isRadarListeningActive) {
                 paneBox.innerHTML = "<div class='text-center text-xs font-black text-emerald-500 animate-pulse py-6'><i class='fa-solid fa-satellite-dish text-2xl mb-2 block'></i>Synchronizing Regional Streams...</div>";
+                
+                // STABLE STREAMS RADAR QUERY FOR RELIABLE LISTENING
                 runtimeDBRef.ref('orders/' + verifiedProfileMeta.city).on('value', snapshot => {
                     if(!isRadarListeningActive) return; paneBox.innerHTML = ""; let requestLoaded = false;
+                    
                     snapshot.forEach(child => {
                         const o = child.val(); 
-                        // SINGLE REQUEST BROADCAST LOGIC SPECIFIED
                         if(!requestLoaded && (o.status === 'pending' || (o.status === 'bidded' && o.bids && o.bids[clientIdentityUIDToken]))) {
-                            requestLoaded = true; document.getElementById('audioNotificationAlert').play(); if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + o.id).update({ views: (o.views || 1) + 1 });
+                            requestLoaded = true; 
+                            document.getElementById('audioNotificationAlert').play(); if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                            
                             activeBroadcastOrderID = o.id;
                             paneBox.innerHTML = `
                                 <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-left space-y-3 shadow-sm">
                                     <div class="flex items-center gap-2"><img src="${o.uPic}" class="w-5 h-5 rounded-full bg-white border border-slate-200"><span class="text-[9px] font-black text-slate-500">${o.uName}</span><span class="ml-auto text-[8px] bg-blue-50 text-blue-600 border border-blue-100 font-black px-2 py-0.5 rounded-full uppercase">${o.type}</span></div>
-                                    <h2 class="text-3xl font-black text-slate-800">PKR ${o.amt}</h2><p class="text-[10px] text-slate-400 font-bold">Client Counter Target Reward: PKR ${o.comm}</p>
-                                    <div class="flex gap-2 pt-1"><input id="inputAgentCounterProposalValue" type="number" placeholder="Enter Counter Bid Tip" class="w-full bg-white p-3 text-xs rounded-xl border border-slate-200 text-slate-800 outline-none"><button onclick="dispatchAgentCounterBidSignal()" class="bg-blue-600 px-5 rounded-xl font-black text-xs text-white">SEND BID</button></div>
+                                    <h2 class="text-3xl font-black text-slate-800">PKR ${o.amt}</h2>
+                                    <p class="text-[11px] text-slate-500 font-bold bg-white px-2 py-1.5 rounded-lg border border-slate-250"><i class="fa-solid fa-bolt text-amber-500 mr-1 animate-bounce"></i> Current Delivery Reward: <strong class="text-emerald-500">PKR ${o.comm}</strong></p>
+                                    <div class="flex gap-2 pt-1"><input id="inputAgentCounterProposalValue" type="number" value="${o.comm}" placeholder="Enter Counter Bid Tip" class="w-full bg-white p-3 text-xs rounded-xl border border-slate-200 text-slate-800 outline-none font-bold text-base"><button onclick="dispatchAgentCounterBidSignal()" class="bg-blue-600 px-5 rounded-xl font-black text-xs text-white">SEND BID</button></div>
                                 </div>`;
                         }
                     });
@@ -323,7 +371,13 @@
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).update({ status: 'bidded' });
             
             document.getElementById('agentSingleFocusedStreamContainer').innerHTML = "<div class='text-center p-6 text-xs font-black text-blue-500 animate-pulse'><i class='fa-solid fa-rotate animate-spin mr-2'></i>Bid Dispatched. Awaiting Client Verdict...</div>";
-            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/status').on('value', s => { if(s.val() === 'locked') { runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/status').off(); runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).once('value', snap => launchSecureTransitNodeTerminalPanel(snap.val())); } });
+            
+            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/status').on('value', s => { 
+                if(s.val() === 'locked') { 
+                    runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/status').off(); 
+                    runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).once('value', snap => launchSecureTransitNodeTerminalPanel(snap.val())); 
+                } 
+            });
         }
 
         function launchSecureTransitNodeTerminalPanel(tx) {
