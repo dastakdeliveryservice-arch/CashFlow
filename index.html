@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>CASHFLOW GLOBAL - STABLE TERMINAL v8.0</title>
+    <title>CASHFLOW GLOBAL - ULTRA TERMINAL v9.0</title>
     
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
@@ -18,10 +18,8 @@
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;700;800&display=swap');
         body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: #0f172a; overflow: hidden; margin: 0; }
         
-        /* ORIGINAL STANDARD GOOGLE MAP LOOK */
         #map { width: 100%; height: 52vh; background: #cbd5e1; z-index: 10; }
         
-        /* PREMIUM BOTTOM SHEET UI PANEL */
         .app-bottom-sheet { background: #ffffff; border-top: 1px solid rgba(0,0,0,0.06); box-shadow: 0 -12px 35px rgba(0,0,0,0.12); border-radius: 32px 32px 0 0; height: 48vh; position: relative; z-index: 100; padding: 24px; overflow-y: auto; }
         .input-field-core { width: 100%; padding: 14px 16px; border-radius: 14px; background: #f1f5f9; border: 1px solid transparent; color: #0f172a; font-weight: 600; outline: none; transition: 0.2s; }
         .input-field-core:focus { background: #ffffff; border-color: #10b981; box-shadow: 0 0 10px rgba(16,185,129,0.1); }
@@ -29,7 +27,6 @@
         .btn-action-master { background: linear-gradient(135deg, #10b981, #059669); color: #ffffff; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; transition: 0.2s; box-shadow: 0 4px 14px rgba(16,185,129,0.25); }
         .btn-action-master:active { transform: scale(0.97); }
         
-        /* SLIDEOUT 3-LINES HAMBURGER NAV */
         #navSlideDrawer { position: fixed; top: 0; left: -100%; width: 80%; height: 100%; background: #ffffff; z-index: 9999; transition: 0.3s ease-in-out; box-shadow: 15px 0 30px rgba(0,0,0,0.1); }
         #navSlideDrawer.active { left: 0; }
         .nav-overlay-blur { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.35); backdrop-filter: blur(2px); z-index: 9998; }
@@ -65,7 +62,7 @@
         </div>
         <div class="space-y-3">
             <div id="authNameFieldBox" class="hidden"><input id="inputAuthName" placeholder="Enter Full Name" class="input-field-core"></div>
-            <input id="inputAuthEmail" type="email" placeholder="Gmail Address (e.g., mail@gmail.com)" class="input-field-core">
+            <input id="inputAuthEmail" type="email" placeholder="Gmail Address" class="input-field-core">
             <input id="inputAuthPass" type="password" placeholder="Secure Password" class="input-field-core">
         </div>
         <button id="authTriggerActionButton" onclick="processSecureGatewayAuth()" class="btn-action-master w-full p-4 rounded-2xl text-white mt-6 font-bold text-sm">Authenticate Node</button>
@@ -89,7 +86,7 @@
             <input id="verifyCNIC" placeholder="CNIC Number (13 Digits)" class="input-field-core">
             <div id="verifyAgentFieldsBlock" class="hidden space-y-3">
                 <input id="verifyLicense" placeholder="Driving License Identification #" class="input-field-core">
-                <input id="verifyVehicle" placeholder="Vehicle Registration Number (e.g., MN-5544)" class="input-field-core">
+                <input id="verifyVehicle" placeholder="Vehicle Registration Number" class="input-field-core">
             </div>
             <select id="verifyCity" class="input-field-core text-slate-400">
                 <option value="" disabled selected>Select Operational City</option>
@@ -131,14 +128,14 @@
                             <div class="bg-slate-50 p-3 rounded-xl border border-slate-100 mb-2 space-y-2">
                                 <div class="flex justify-between items-center">
                                     <p class="text-[9px] font-black text-slate-400 tracking-wider">RADAR ACTIVE PROFILE</p>
-                                    <span class="text-[10px] font-black text-emerald-600" id="liveRadarViewersTextCount"><i class="fa-solid fa-users animate-pulse mr-1"></i> 0 Agents Scanning</span>
+                                    <span class="text-[10px] font-black text-emerald-600" id="liveRadarViewersTextCount"><i class="fa-solid fa-users animate-pulse mr-1"></i> 1 Agent Scanning</span>
                                 </div>
                                 <div class="text-[11px] text-slate-700 font-bold flex justify-between bg-white p-2 rounded-lg border border-slate-100">
                                     <span>Live Offer: <strong id="userLiveOfferDisplay">PKR 0</strong></span>
                                     <span>Tip: <strong id="userLiveTipDisplay" class="text-emerald-500">PKR 0</strong></span>
                                 </div>
                                 <div class="flex gap-2">
-                                    <button onclick="increaseUserOfferTipSurge()" class="flex-1 bg-amber-500 text-white font-black text-[10px] p-2 rounded-xl shadow-sm uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i> Raise Reward (+50 PKR)</button>
+                                    <button onclick="increaseUserOfferTipSurge()" class="flex-1 bg-amber-500 text-white font-black text-[10px] p-2 rounded-xl shadow-sm uppercase tracking-wider"><i class="fa-solid fa-bolt mr-1"></i> Raise Reward (+50)</button>
                                     <button onclick="cancelActiveUserRequestSignal()" class="flex-1 bg-red-600 text-white font-black text-[10px] p-2 rounded-xl shadow-sm uppercase tracking-wider"><i class="fa-solid fa-trash-can mr-1"></i> Cancel Req</button>
                                 </div>
                             </div>
@@ -151,7 +148,6 @@
                             <h3 class="text-lg font-black text-slate-800 italic">Operational City Radar</h3>
                             <button id="agentRadarLifecycleBtn" onclick="toggleAgentRadarScanningState()" class="px-5 py-1.5 bg-red-600 text-white font-black text-[9px] rounded-full uppercase tracking-widest shadow-md">OFFLINE</button>
                         </div>
-                        
                         <div id="agentSingleFocusedStreamContainer" class="flex-1 overflow-y-auto space-y-3 pr-1 flex flex-col justify-center">
                             <p id="agentStatusPlaceholderMsg" class="text-center text-xs text-slate-400 font-bold">Turn Radar ONLINE to bind tracking connection logs.</p>
                         </div>
@@ -160,11 +156,11 @@
                     <div id="secureTransitNodeEndpointTerminal" class="hidden h-full flex flex-col justify-between overflow-hidden">
                         <div id="chatMessagesLoggerContainer" class="flex-1 overflow-y-auto bg-slate-50 p-4 rounded-2xl border border-slate-100 mb-3 flex flex-col gap-2 text-xs"></div>
                         <div class="flex gap-2 mb-3">
-                            <input id="inputTerminalChatMessageText" placeholder="Transmit end-to-end encrypted text..." class="input-field-core !p-3.5 !text-xs !mb-0">
+                            <input id="inputTerminalChatMessageText" placeholder="Transmit text..." class="input-field-core !p-3.5 !text-xs !mb-0">
                             <button onclick="dispatchSecureTerminalChatMessage()" class="bg-emerald-500 text-white px-5 rounded-xl text-xs"><i class="fa-solid fa-paper-plane"></i></button>
                         </div>
                         <div class="bg-slate-50 border border-slate-100 p-4 rounded-xl text-center">
-                            <div id="userOTPDisplayFrameLabel"><p class="text-[8px] text-slate-400 font-black tracking-widest mb-1">COMPLIANCE SETTLEMENT PRIVACY KEY</p><h1 id="otpCodeNumericValueTextDisplay" class="text-3xl font-black text-emerald-500 tracking-widest">----</h1></div>
+                            <div id="userOTPDisplayFrameLabel"><p class="text-[8px] text-slate-400 font-black tracking-widest mb-1">SETTLEMENT PRIVACY KEY</p><h1 id="otpCodeNumericValueTextDisplay" class="text-3xl font-black text-emerald-500 tracking-widest">----</h1></div>
                             <div id="agentOTPInputFieldFrameLabel" class="hidden flex gap-2"><input id="agentInputOTPFieldToken" placeholder="ENTER UNIQUE AUTH TOKEN" class="input-field-core text-center text-sm tracking-widest !p-3 !mb-0"><button onclick="executeFinalAuthenticationTokenSettlement()" class="bg-blue-600 font-black px-5 text-xs rounded-xl text-white shadow-sm">RELEASE FUNDS</button></div>
                         </div>
                     </div>
@@ -183,6 +179,7 @@
         let activeBroadcastOrderID = null; let isRadarListeningActive = false; let currentAuthModeState = 'login';
 
         function setupStandardCleanLeafletMap() {
+            if(leafletMapEngineObj) return;
             leafletMapEngineObj = L.map('map', { zoomControl: false, attributionControl: false }).setView([30.1575, 71.5249], 14);
             L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png').addTo(leafletMapEngineObj);
             L.marker([30.1575, 71.5249]).addTo(leafletMapEngineObj);
@@ -198,7 +195,7 @@
         function processSecureGatewayAuth() {
             const email = document.getElementById('inputAuthEmail').value; const pass = document.getElementById('inputAuthPass').value;
             const name = document.getElementById('inputAuthName').value;
-            if(!email || !pass || (currentAuthModeState === 'register' && !name)) { alert("Authentication nodes cannot be blank."); return; }
+            if(!email || !pass || (currentAuthModeState === 'register' && !name)) { alert("Fields cannot be blank."); return; }
             
             verifiedProfileMeta = { name: currentAuthModeState === 'register' ? name : email.split('@')[0], email, role: 'user', pic: "https://api.dicebear.com/7.x/bottts/svg?seed=" + clientIdentityUIDToken, isVerifiedNode: false };
             localStorage.setItem('cf_v7_auth_session', JSON.stringify(verifiedProfileMeta));
@@ -210,7 +207,6 @@
             activeOperationalRole = role; verifiedProfileMeta.role = role;
             localStorage.setItem('cf_v7_runtime_role', role);
             document.getElementById('roleSelectorStagePanel').classList.add('hidden');
-            
             document.getElementById('verificationStagePanel').classList.remove('hidden');
             if(role === 'agent') {
                 document.getElementById('verificationViewTitle').innerText = "Agent Compliance Registry";
@@ -220,7 +216,7 @@
 
         function commitVerificationLedgerData() {
             const phone = document.getElementById('verifyPhone').value; const cnic = document.getElementById('verifyCNIC').value; const city = document.getElementById('verifyCity').value;
-            if(!phone || !cnic || !city) { alert("Compliance error. All filters must be provided."); return; }
+            if(!phone || !cnic || !city) { alert("All filters must be provided."); return; }
             
             verifiedProfileMeta.phone = phone; verifiedProfileMeta.cnic = cnic; verifiedProfileMeta.city = city; verifiedProfileMeta.isVerifiedNode = true;
             if(activeOperationalRole === 'agent') {
@@ -245,14 +241,15 @@
 
         function handleDynamicProfileSwitch() {
             if(activeOperationalRole === 'user') {
-                if(verifiedProfileMeta.vehicle && verifiedProfileMeta.vehicle !== undefined) { activeOperationalRole = 'agent'; localStorage.setItem('cf_v7_runtime_role', 'agent'); initializeCoreApplicationWorkflowWindow(); } 
+                if(verifiedProfileMeta.vehicle) { activeOperationalRole = 'agent'; localStorage.setItem('cf_v7_runtime_role', 'agent'); initializeCoreApplicationWorkflowWindow(); } 
                 else { document.getElementById('mainApplicationAppFrame').classList.add('hidden'); document.getElementById('verificationViewTitle').innerText = "Agent Compliance Registry"; document.getElementById('verifyAgentFieldsBlock').classList.remove('hidden'); document.getElementById('verificationStagePanel').classList.remove('hidden'); }
             } else { activeOperationalRole = 'user'; localStorage.setItem('cf_v7_runtime_role', 'user'); if(isRadarListeningActive) toggleAgentRadarScanningState(); initializeCoreApplicationWorkflowWindow(); }
         }
 
         function initializeCoreApplicationWorkflowWindow() {
             activeOperationalRole = localStorage.getItem('cf_v7_runtime_role') || 'user';
-            document.getElementById('mainApplicationAppFrame').classList.remove('hidden'); if(!leafletMapEngineObj) setupStandardCleanLeafletMap();
+            document.getElementById('mainApplicationAppFrame').classList.remove('hidden'); 
+            setupStandardCleanLeafletMap();
             document.getElementById('panelUserDashboard').classList.toggle('hidden', activeOperationalRole !== 'user');
             document.getElementById('panelAgentDashboard').classList.toggle('hidden', activeOperationalRole !== 'agent');
             if(activeOperationalRole === 'agent') { toggleAgentRadarScanningState(true); }
@@ -274,11 +271,7 @@
         function trackUserRequestStreamLifecycle(id) {
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + id).on('value', snapshot => {
                 const tx = snapshot.val(); 
-                if(!tx) { 
-                    // Handle case where request was cancelled from DB
-                    abortActiveMonitorScreenState();
-                    return; 
-                }
+                if(!tx) { abortActiveMonitorScreenState(); return; }
                 
                 document.getElementById('userLiveOfferDisplay').innerText = "PKR " + tx.amt;
                 document.getElementById('userLiveTipDisplay').innerText = "PKR " + tx.comm;
@@ -302,7 +295,6 @@
             });
         }
 
-        // INDRIVE EXTRA DYNAMIC FEATURES
         function increaseUserOfferTipSurge() {
             if(!activeBroadcastOrderID) return;
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/comm').transaction(currentTip => {
@@ -312,14 +304,12 @@
 
         function cancelActiveUserRequestSignal() {
             if(!activeBroadcastOrderID) return;
-            if(confirm("Are you sure you want to cancel this CashFlow request?")) {
-                runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).remove();
-                abortActiveMonitorScreenState();
-            }
+            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).remove();
+            abortActiveMonitorScreenState();
         }
 
         function abortActiveMonitorScreenState() {
-            runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).off();
+            if(activeBroadcastOrderID) runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).off();
             activeBroadcastOrderID = null;
             document.getElementById('userBiddingMonitorRadarRoom').classList.add('hidden');
             document.getElementById('userHomeMenuLayout').classList.remove('hidden');
@@ -330,6 +320,7 @@
             else { runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/bids/' + agentUID).remove(); }
         }
 
+        // AGENT RADAR REALTIME VALUE ENGINE FIXED
         function toggleAgentRadarScanningState(forceState = null) {
             isRadarListeningActive = (forceState !== null) ? forceState : !isRadarListeningActive;
             const btn = document.getElementById('agentRadarLifecycleBtn'); if(!btn) return;
@@ -340,29 +331,37 @@
             if(isRadarListeningActive) {
                 paneBox.innerHTML = "<div class='text-center text-xs font-black text-emerald-500 animate-pulse py-6'><i class='fa-solid fa-satellite-dish text-2xl mb-2 block'></i>Synchronizing Regional Streams...</div>";
                 
-                // STABLE STREAMS RADAR QUERY FOR RELIABLE LISTENING
+                // BULLETPROOF PERSISTENT LISTENER FOR ALL ACTIVE REQUESTS
                 runtimeDBRef.ref('orders/' + verifiedProfileMeta.city).on('value', snapshot => {
-                    if(!isRadarListeningActive) return; paneBox.innerHTML = ""; let requestLoaded = false;
+                    if(!isRadarListeningActive) return; 
+                    paneBox.innerHTML = ""; let requestLoaded = false;
                     
-                    snapshot.forEach(child => {
-                        const o = child.val(); 
-                        if(!requestLoaded && (o.status === 'pending' || (o.status === 'bidded' && o.bids && o.bids[clientIdentityUIDToken]))) {
-                            requestLoaded = true; 
-                            document.getElementById('audioNotificationAlert').play(); if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
-                            
-                            activeBroadcastOrderID = o.id;
-                            paneBox.innerHTML = `
-                                <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-left space-y-3 shadow-sm">
-                                    <div class="flex items-center gap-2"><img src="${o.uPic}" class="w-5 h-5 rounded-full bg-white border border-slate-200"><span class="text-[9px] font-black text-slate-500">${o.uName}</span><span class="ml-auto text-[8px] bg-blue-50 text-blue-600 border border-blue-100 font-black px-2 py-0.5 rounded-full uppercase">${o.type}</span></div>
-                                    <h2 class="text-3xl font-black text-slate-800">PKR ${o.amt}</h2>
-                                    <p class="text-[11px] text-slate-500 font-bold bg-white px-2 py-1.5 rounded-lg border border-slate-250"><i class="fa-solid fa-bolt text-amber-500 mr-1 animate-bounce"></i> Current Delivery Reward: <strong class="text-emerald-500">PKR ${o.comm}</strong></p>
-                                    <div class="flex gap-2 pt-1"><input id="inputAgentCounterProposalValue" type="number" value="${o.comm}" placeholder="Enter Counter Bid Tip" class="w-full bg-white p-3 text-xs rounded-xl border border-slate-200 text-slate-800 outline-none font-bold text-base"><button onclick="dispatchAgentCounterBidSignal()" class="bg-blue-600 px-5 rounded-xl font-black text-xs text-white">SEND BID</button></div>
-                                </div>`;
-                        }
-                    });
-                    if(!requestLoaded) paneBox.innerHTML = "<p class='text-center text-xs text-slate-400 font-bold py-8'>Radar Cleared. No active incoming traffic streams.</p>";
+                    if(snapshot.exists()) {
+                        snapshot.forEach(child => {
+                            const o = child.val(); 
+                            // Matches active pending or bidded requests by this specific agent
+                            if(!requestLoaded && (o.status === 'pending' || (o.status === 'bidded' && o.bids && o.bids[clientIdentityUIDToken]))) {
+                                requestLoaded = true; 
+                                activeBroadcastOrderID = o.id;
+                                try { document.getElementById('audioNotificationAlert').play(); } catch(e){}
+                                if(navigator.vibrate) navigator.vibrate([100, 50, 100]);
+                                
+                                paneBox.innerHTML = `
+                                    <div class="bg-slate-50 p-5 rounded-2xl border border-slate-100 text-left space-y-3 shadow-sm">
+                                        <div class="flex items-center gap-2"><img src="${o.uPic}" class="w-5 h-5 rounded-full bg-white border border-slate-200"><span class="text-[9px] font-black text-slate-500">${o.uName}</span><span class="ml-auto text-[8px] bg-blue-50 text-blue-600 border border-blue-100 font-black px-2 py-0.5 rounded-full uppercase">${o.type}</span></div>
+                                        <h2 class="text-3xl font-black text-slate-800">PKR ${o.amt}</h2>
+                                        <p class="text-[11px] text-slate-500 font-bold bg-white px-2 py-1.5 rounded-lg border border-slate-200"><i class="fa-solid fa-bolt text-amber-500 mr-1"></i> Reward Offer: <strong class="text-emerald-500">PKR ${o.comm}</strong></p>
+                                        <div class="flex gap-2 pt-1"><input id="inputAgentCounterProposalValue" type="number" value="${o.comm}" class="w-full bg-white p-3 text-xs rounded-xl border border-slate-200 text-slate-800 outline-none font-bold text-base"><button onclick="dispatchAgentCounterBidSignal()" class="bg-blue-600 px-5 rounded-xl font-black text-xs text-white">SEND BID</button></div>
+                                    </div>`;
+                            }
+                        });
+                    }
+                    if(!requestLoaded) paneBox.innerHTML = "<p class='text-center text-xs text-slate-400 font-bold py-8'>Radar Cleared. Waiting for live signals...</p>";
                 });
-            } else { runtimeDBRef.ref('orders/' + verifiedProfileMeta.city).off(); paneBox.innerHTML = "<p class='text-center text-xs text-slate-400 font-bold py-8'>Radar Offline.</p>"; }
+            } else { 
+                runtimeDBRef.ref('orders/' + verifiedProfileMeta.city).off(); 
+                paneBox.innerHTML = "<p class='text-center text-xs text-slate-400 font-bold py-8'>Radar Offline.</p>"; 
+            }
         }
 
         function dispatchAgentCounterBidSignal() {
@@ -370,7 +369,7 @@
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/bids/' + clientIdentityUIDToken).set({ aUID: clientIdentityUIDToken, aName: verifiedProfileMeta.name, aPic: verifiedProfileMeta.pic, proposedBid: val });
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).update({ status: 'bidded' });
             
-            document.getElementById('agentSingleFocusedStreamContainer').innerHTML = "<div class='text-center p-6 text-xs font-black text-blue-500 animate-pulse'><i class='fa-solid fa-rotate animate-spin mr-2'></i>Bid Dispatched. Awaiting Client Verdict...</div>";
+            document.getElementById('agentSingleFocusedStreamContainer').innerHTML = "<div class='text-center p-6 text-xs font-black text-blue-500 animate-pulse'><i class='fa-solid fa-rotate animate-spin mr-2'></i>Bid Lodged. Awaiting Client Verdict...</div>";
             
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/status').on('value', s => { 
                 if(s.val() === 'locked') { 
@@ -390,7 +389,9 @@
             
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID + '/chats').on('value', snap => {
                 const logger = document.getElementById('chatMessagesLoggerContainer'); logger.innerHTML = "";
-                snap.forEach(c => { const m = c.val(); const isMe = m.sender === clientIdentityUIDToken; logger.innerHTML += `<div class="p-2.5 rounded-xl max-w-[85%] ${isMe ? 'bg-emerald-500 text-white ml-auto' : 'bg-slate-100 border border-slate-200'}" style="word-break: break-word;">${m.msg}</div>`; });
+                if(snap.exists()){
+                    snap.forEach(c => { const m = c.val(); const isMe = m.sender === clientIdentityUIDToken; logger.innerHTML += `<div class="p-2.5 rounded-xl max-w-[85%] ${isMe ? 'bg-emerald-500 text-white ml-auto' : 'bg-slate-100 border border-slate-200'}" style="word-break: break-word;">${m.msg}</div>`; });
+                }
                 logger.scrollTop = logger.scrollHeight;
             });
         }
@@ -404,7 +405,7 @@
         function executeFinalAuthenticationTokenSettlement() {
             const ent = document.getElementById('agentInputOTPFieldToken').value;
             runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).once('value', s => {
-                if(s.val().otp == ent) {
+                if(s.val() && s.val().otp == ent) {
                     alert("Settlement Pin Match! System branch closed successfully.");
                     runtimeDBRef.ref('orders/' + verifiedProfileMeta.city + '/' + activeBroadcastOrderID).remove();
                     location.reload();
